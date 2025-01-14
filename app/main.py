@@ -3,6 +3,10 @@ import os
 from fastapi import FastAPI
 from app.database import engine, Base
 from app.routers import users, boats, trips, reservations, logs
+from app.database import get_db
+from sqlalchemy.orm import Session
+from fastapi.params import Depends
+from typing_extensions import Annotated
 
 # Add the parent directory to the PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -15,6 +19,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
+db_dependecy = Annotated[Session, Depends(get_db)]
 # Crée les tables dans la BDD
 Base.metadata.create_all(bind=engine)
 
@@ -27,4 +32,4 @@ app.include_router(logs.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=os.getenv("HOST_URL", "0.0.0.0"), port=8000)
+    uvicorn.run(app, host=os.getenv("HOST_URL",), port=8000)
