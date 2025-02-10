@@ -1,0 +1,162 @@
+[
+    {
+        "id": 1,
+        "title": "Sunset Fishing Trip",
+        "description": "Enjoy a beautiful sunset while fishing in the open sea.",
+        "nb_passenger": 4,
+        "price": 150.0,
+        "trip_type": "LEISURE",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 1
+    },
+    {
+        "id": 2,
+        "title": "Deep Sea Adventure",
+        "description": "Experience the thrill of deep sea fishing with our expert guides.",
+        "nb_passenger": 6,
+        "price": 300.0,
+        "trip_type": "ADVENTURE",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 2
+    },
+    {
+        "id": 3,
+        "title": "Family Fishing Fun",
+        "description": "A perfect fishing trip for the whole family.",
+        "nb_passenger": 5,
+        "price": 200.0,
+        "trip_type": "FAMILY",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 3
+    },
+    {
+        "id": 4,
+        "title": "Lake Fishing Expedition",
+        "description": "Explore the serene beauty of a mountain lake while fishing.",
+        "nb_passenger": 3,
+        "price": 120.0,
+        "trip_type": "NATURE",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 4
+    },
+    {
+        "id": 5,
+        "title": "River Fishing Retreat",
+        "description": "Relax and fish in the calm waters of a river.",
+        "nb_passenger": 2,
+        "price": 100.0,
+        "trip_type": "RELAXATION",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 5
+    },
+    {
+        "id": 6,
+        "title": "Sport Fishing Challenge",
+        "description": "Test your fishing skills with our challenging sport fishing trip.",
+        "nb_passenger": 4,
+        "price": 180.0,
+        "trip_type": "SPORT",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 6
+    },
+    {
+        "id": 7,
+        "title": "Island Fishing Expedition",
+        "description": "Embark on an island adventure with our fishing expedition.",
+        "nb_passenger": 8,
+        "price": 400.0,
+        "trip_type": "EXPLORATION",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 7
+    },
+    {
+        "id": 8,
+        "title": "Night Fishing Adventure",
+        "description": "Experience the thrill of night fishing under the stars.",
+        "nb_passenger": 3,
+        "price": 130.0,
+        "trip_type": "NIGHT",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 8
+    },
+    {
+        "id": 9,
+        "title": "Weekend Fishing Getaway",
+        "description": "Escape for a weekend of fishing and relaxation on the water.",
+        "nb_passenger": 6,
+        "price": 250.0,
+        "trip_type": "WEEKEND",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 9
+    },
+    {
+        "id": 10,
+        "title": "River Fishing Expedition",
+        "description": "Embark on a fishing expedition along a scenic river.",
+        "nb_passenger": 4,
+        "price": 160.0,
+        "trip_type": "EXPEDITION",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 10
+    },
+    {
+        "id": 11,
+        "title": "Coastal Fishing Adventure",
+        "description": "Explore the coastal waters on a thrilling fishing adventure.",
+        "nb_passenger": 5,
+        "price": 190.0,
+        "trip_type": "COASTAL",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 10
+    },
+    {
+        "id": 12,
+        "title": "River Fishing Retreat",
+        "description": "Relax and fish in the calm waters of a river.",
+        "nb_passenger": 2,
+        "price": 100.0,
+        "trip_type": "RELAXATION",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 10
+    },
+    {
+        "id": 13,
+        "title": "Sport Fishing Challenge",
+        "description": "Test your fishing skills with our challenging sport fishing trip.",
+        "nb_passenger": 4,
+        "price": 180.0,
+        "trip_type": "SPORT",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 10
+    },
+    {
+        "id": 14,
+        "title": "Island Fishing Expedition",
+        "description": "Embark on an island adventure with our fishing expedition.",
+        "nb_passenger": 8,
+        "price": 400.0,
+        "trip_type": "EXPLORATION",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 10
+    },
+    {
+        "id": 15,
+        "title": "Night Fishing Adventure",
+        "description": "Experience the thrill of night fishing under the stars.",
+        "nb_passenger": 3,
+        "price": 130.0,
+        "trip_type": "NIGHT",
+        "pricing_type": "PER_PERSON",
+        "boat_id": 10
+    },
+    {
+        "id": 16,
+        "title": "Weekend Fishing Getaway",
+        "description": "Escape for a weekend of fishing and relaxation on the water.",
+        "nb_passenger": 6,
+        "price": 250.0,
+        "trip_type": "WEEKEND",
+        "pricing_type": "PER_TRIP",
+        "boat_id": 10
+    }
+]

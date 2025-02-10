@@ -1,20 +1,22 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-import datetime
-
-Base = declarative_base()
+from app.database import Base
+from pydantic import ConfigDict
 
 class Log(Base):
-    __tablename__ = 'logs'
+    __tablename__ = "logs"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    fish_name = Column(String, nullable=False)
-    size = Column(Float, nullable=False)
-    weight = Column(Float, nullable=False)
-    location = Column(String, nullable=False)
-    date_caught = Column(DateTime, default=datetime.datetime.utcnow)
-    released = Column(Boolean, default=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    fish = Column(String(100))
+    picture = Column(String(255))
+    comment = Column(Text)
+    size = Column(Float)
+    weight = Column(Float)
+    place = Column(String(100))
+    kept = Column(Integer)
 
+    user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="logs")
+
+    class Config:
+        model_config = ConfigDict()

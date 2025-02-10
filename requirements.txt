@@ -6,3 +6,11 @@ pydantic
 pymysql
 alembic
 python-dotenv
+cryptography
+httpx
+pytest
+pytest-asyncio
+PyJWT
+typing_extensions
+python-multipart
+bcrypt

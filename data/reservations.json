@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "nb_places": 2,
+        "total_price": 150.0,
+        "user_id": 1,
+        "trip_id": 1
+    },
+    {
+        "id": 2,
+        "nb_places": 4,
+        "total_price": 300.0,
+        "user_id": 2,
+        "trip_id": 2
+    },
+    {
+        "id": 3,
+        "nb_places": 1,
+        "total_price": 75.0,
+        "user_id": 3,
+        "trip_id": 3
+    },
+    {
+        "id": 4,
+        "nb_places": 3,
+        "total_price": 360.0,
+        "user_id": 4,
+        "trip_id": 4
+    },
+    {
+        "id": 5,
+        "nb_places": 2,
+        "total_price": 200.0,
+        "user_id": 5,
+        "trip_id": 5
+    },
+    {
+        "id": 6,
+        "nb_places": 4,
+        "total_price": 720.0,
+        "user_id": 6,
+        "trip_id": 6
+    },
+    {
+        "id": 7,
+        "nb_places": 2,
+        "total_price": 150.0,
+        "user_id": 1,
+        "trip_id": 1
+    },
+    {
+        "id": 8,
+        "nb_places": 4,
+        "total_price": 300.0,
+        "user_id": 2,
+        "trip_id": 2
+    },
+    {
+        "id": 9,
+        "nb_places": 1,
+        "total_price": 75.0,
+        "user_id": 3,
+        "trip_id": 3
+    },
+    {
+        "id": 10,
+        "nb_places": 3,
+        "total_price": 360.0,
+        "user_id": 4,
+        "trip_id": 4
+    },
+    {
+        "id": 11,
+        "nb_places": 2,
+        "total_price": 200.0,
+        "user_id": 5,
+        "trip_id": 5
+    },
+    {
+        "id": 12,
+        "nb_places": 4,
+        "total_price": 720.0,
+        "user_id": 6,
+        "trip_id": 6
+    }
+]

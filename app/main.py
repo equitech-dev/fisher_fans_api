@@ -1,12 +1,14 @@
-import sys
-import os
+from typing_extensions import Annotated
 from fastapi import FastAPI
 from app.database import engine, Base
-from app.routers import users, boats, trips, reservations, logs
-from app.database import get_db
+from app.routers import users, boats, trips, reservations, logs, auth  # Ajoutez auth
+from app.init_db import init_db
+import uvicorn
 from sqlalchemy.orm import Session
-from fastapi.params import Depends
-from typing_extensions import Annotated
+from app.database import get_db
+from fastapi import Depends
+import sys
+import os
 
 # Add the parent directory to the PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -28,8 +30,9 @@ app.include_router(boats.router)
 app.include_router(trips.router)
 app.include_router(reservations.router)
 app.include_router(logs.router)
-
+app.include_router(auth.router)  # Ajoutez le routeur d'authentification
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host=os.getenv("HOST_URL",), port=8000)
+    get_db()
+    init_db()
+    uvicorn.run(app, host="0.0.0.0", port=8000)

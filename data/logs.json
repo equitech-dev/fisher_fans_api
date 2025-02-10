@@ -1,0 +1,112 @@
+[
+    {
+        "id": 1,
+        "fish": "Salmon",
+        "picture": "salmon.jpg",
+        "comment": "Caught a big one!",
+        "size": 30.5,
+        "weight": 5.2,
+        "place": "River Thames",
+        "kept": 1,
+        "user_id": 1
+    },
+    {
+        "id": 2,
+        "fish": "Trout",
+        "picture": "trout.jpg",
+        "comment": "Beautiful catch.",
+        "size": 25.0,
+        "weight": 3.1,
+        "place": "Lake Tahoe",
+        "kept": 0,
+        "user_id": 2
+    },
+    {
+        "id": 3,
+        "fish": "Bass",
+        "picture": "bass.jpg",
+        "comment": "Nice fight!",
+        "size": 20.0,
+        "weight": 2.5,
+        "place": "Lake Michigan",
+        "kept": 1,
+        "user_id": 3
+    },
+    {
+        "id": 4,
+        "fish": "Pike",
+        "picture": "pike.jpg",
+        "comment": "Aggressive one.",
+        "size": 35.0,
+        "weight": 4.8,
+        "place": "Lake Superior",
+        "kept": 0,
+        "user_id": 4
+    },
+    {
+        "id": 5,
+        "fish": "Catfish",
+        "picture": "catfish.jpg",
+        "comment": "Heavy catch.",
+        "size": 40.0,
+        "weight": 6.0,
+        "place": "Mississippi River",
+        "kept": 1,
+        "user_id": 5
+    },
+    {
+        "id": 6,
+        "fish": "Carp",
+        "picture": "carp.jpg",
+        "comment": "Biggest one yet!",
+        "size": 45.0,
+        "weight": 7.5,
+        "place": "Danube River",
+        "kept": 0,
+        "user_id": 6
+    },
+    {
+        "id": 7,
+        "fish": "Perch",
+        "picture": "perch.jpg",
+        "comment": "Small but fun.",
+        "size": 15.0,
+        "weight": 1.2,
+        "place": "Lake Erie",
+        "kept": 1,
+        "user_id": 7
+    },
+    {
+        "id": 8,
+        "fish": "Mackerel",
+        "picture": "mackerel.jpg",
+        "comment": "Fast swimmer.",
+        "size": 18.0,
+        "weight": 2.0,
+        "place": "Atlantic Ocean",
+        "kept": 0,
+        "user_id": 8
+    },
+    {
+        "id": 9,
+        "fish": "Tuna",
+        "picture": "tuna.jpg",
+        "comment": "Strong fish.",
+        "size": 50.0,
+        "weight": 8.0,
+        "place": "Pacific Ocean",
+        "kept": 1,
+        "user_id": 9
+    },
+    {
+        "id": 10,
+        "fish": "Swordfish",
+        "picture": "swordfish.jpg",
+        "comment": "Challenging catch.",
+        "size": 60.0,
+        "weight": 10.0,
+        "place": "Indian Ocean",
+        "kept": 0,
+        "user_id": 10
+    }
+]

@@ -1,0 +1,621 @@
+openapi: 3.1.0
+info:
+  title: Fisher Fans API
+  description: API pour gérer les utilisateurs, bateaux, sorties de pêche, réservations et carnets de pêche.
+  version: 1.0.0
+
+servers:
+  - url: https://api.fisherfans.com/
+    description: Serveur de production Fisher Fans
+
+paths:
+  /v1/login:
+    post:
+      summary: Authentification de l'utilisateur
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Authentification réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInscriptionReurn'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/users:
+    post:
+      summary: Créer un nouvel utilisateur
+      tags:
+        - Users
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        '200':
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithToken'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/users/{id}:
+    get:
+      summary: Obtenir les détails d'un utilisateur spécifique
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Modifier un utilisateur existant
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Supprimer un utilisateur
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/boats:
+    post:
+      summary: Créer un nouveau bateau
+      tags:
+        - Boats
+      requestBody:
+        $ref: '#/components/requestBodies/Boat'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    get:  # Nouveau endpoint pour récupérer des bateaux avec filtres
+      summary: Obtenir une liste de bateaux avec des filtres
+      tags:
+        - Boats
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [open, cabin, catamaran, yacht, jetski, canoe]
+          description: Filtrer par type de bateau
+        - name: marque
+          in: query
+          schema:
+            type: string
+          description: Filtrer par marque
+        - name: annee_fabrication
+          in: query
+          schema:
+            type: integer
+          description: Filtrer par année de fabrication
+      responses:
+        '200':
+          description: Liste de bateaux
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Boat'
+
+  /v1/boats/{id}:
+    get:
+      summary: Obtenir les détails d'un bateau spécifique
+      tags:
+        - Boats
+      parameters:
+        - $ref: '#/components/parameters/BoatId'
+      responses:
+        '200':
+          $ref: '#/components/schemas/Boat'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Modifier les informations d'un bateau
+      tags:
+        - Boats
+      parameters:
+        - $ref: '#/components/parameters/BoatId'
+      requestBody:
+        $ref: '#/components/requestBodies/Boat'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Supprimer un bateau
+      tags:
+        - Boats
+      parameters:
+        - $ref: '#/components/parameters/BoatId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/trips:
+    post:
+      summary: Créer une nouvelle sortie de pêche
+      tags:
+        - Trips
+      requestBody:
+        $ref: '#/components/requestBodies/Trip'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    get:  # Nouveau endpoint pour récupérer des sorties de pêche avec filtres
+      summary: Obtenir une liste de sorties de pêche avec des filtres
+      tags:
+        - Trips
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [journalière, récurrente]
+          description: Filtrer par type de sortie
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filtrer par date de sortie
+      responses:
+        '200':
+          description: Liste de sorties de pêche
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+
+  /v1/trips/{id}:
+    get:
+      summary: Obtenir les détails d'une sortie de pêche
+      tags:
+        - Trips
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      responses:
+        '200':
+          $ref: '#/components/schemas/Trip'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Modifier une sortie de pêche
+      tags:
+        - Trips
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      requestBody:
+        $ref: '#/components/requestBodies/Trip'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Supprimer une sortie de pêche
+      tags:
+        - Trips
+      parameters:
+        - $ref: '#/components/parameters/TripId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/reservations:
+    post:
+      summary: Créer une nouvelle réservation
+      tags:
+        - Reservations
+      requestBody:
+        $ref: '#/components/requestBodies/Reservation'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/reservations/{id}:
+    get:
+      summary: Obtenir les détails d'une réservation
+      tags:
+        - Reservations
+      parameters:
+        - $ref: '#/components/parameters/ReservationId'
+      responses:
+        '200':
+          $ref: '#/components/schemas/Reservation'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Modifier une réservation
+      tags:
+        - Reservations
+      parameters:
+        - $ref: '#/components/parameters/ReservationId'
+      requestBody:
+        $ref: '#/components/requestBodies/Reservation'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Annuler une réservation
+      tags:
+        - Reservations
+      parameters:
+        - $ref: '#/components/parameters/ReservationId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/logs:
+    post:
+      summary: Créer une nouvelle page de carnet de pêche
+      tags:
+        - Logs
+      requestBody:
+        $ref: '#/components/requestBodies/Log'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /v1/logs/{id}:
+    get:
+      summary: Obtenir les détails d'une page spécifique du carnet de pêche
+      tags:
+        - Logs
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      responses:
+        '200':
+          $ref: '#/components/schemas/Log'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Modifier une page du carnet de pêche
+      tags:
+        - Logs
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      requestBody:
+        $ref: '#/components/requestBodies/Log'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Supprimer une page du carnet de pêche
+      tags:
+        - Logs
+      parameters:
+        - $ref: '#/components/parameters/LogId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  responses:
+    SuccessResponse:
+      description: Opération réussie
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+    ErrorResponse:
+      description: Requête incorrecte ou ressource non trouvée
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  requestBodies:
+    User:
+      description: Détails de l'utilisateur
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    Boat:
+      description: Détails du bateau
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Boat'
+    Trip:
+      description: Détails de la sortie de pêche
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Trip'
+    Reservation:
+      description: Détails de la réservation
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Reservation'
+    Log:
+      description: Détails du carnet de pêche
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Log'
+
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID unique de l'utilisateur
+    BoatId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID unique du bateau
+    TripId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID unique de la sortie de pêche
+    ReservationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID unique de la réservation
+    LogId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID unique de la page du carnet de pêche
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'utilisateur
+        name:
+          type: string
+          description: Nom de l'utilisateur
+        firstname:
+          type: string
+          description: Prénom de l'utilisateur
+        email:
+          type: string
+          description: Adresse e-mail de l'utilisateur
+        phone:
+          type: string
+          description: Numéro de téléphone de l'utilisateur
+        picture:
+          type: string
+          description: URL de la photo de profil de l'utilisateur
+        boat_license:
+          type: integer
+          description: Numéro de licence de bateau de l'utilisateur
+        insurance:
+          type: string
+          description: Assurance de l'utilisateur
+        company_name:
+          type: string
+          description: Nom de la société de l'utilisateur
+        siret:
+          type: string
+          description: Numéro SIRET de l'utilisateur
+        rcs:
+          type: string
+          description: Numéro RCS de l'utilisateur
+        status:
+          type: string
+          description: Rôle de l'utilisateur (particulier, professionnel)
+          enum: [particulier, professionnel]
+        boats:
+          type: array
+          items:
+            $ref: '#/components/schemas/Boat'
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Log'
+        reservations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+
+    UserWithToken:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            access_token:
+              type: string
+              description: Jeton d'accès JWT
+            token_type:
+              type: string
+              description: Type de jeton
+              example: bearer
+
+    Boat:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique du bateau
+        name:
+          type: string
+          description: Nom du bateau
+        boat_type:
+          type: string
+          description: Type du bateau
+          enum: [open, cabin, catamaran, yacht, jetski, canoe]
+        motor:
+          type: string
+          description: Type de motorisation
+          enum: [diesel, essence, none]
+        capacity:
+          type: integer
+          description: Capacité du bateau
+        owner:
+          $ref: '#/components/schemas/User'
+
+    Trip:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de la sortie de pêche
+        title:
+          type: string
+          description: Titre de la sortie de pêche
+        trip_date:
+          type: string
+          format: date
+          description: Date de la sortie
+        price:
+          type: number
+          format: float
+          description: Prix de la sortie de pêche
+        boat:
+          $ref: '#/components/schemas/Boat'
+        organizer:
+          $ref: '#/components/schemas/User'
+
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de la réservation
+        user:
+          $ref: '#/components/schemas/User'
+        trip:
+          $ref: '#/components/schemas/Trip'
+        number_of_seats:
+          type: integer
+          description: Nombre de places réservées
+        total_price:
+          type: number
+          format: float
+          description: Prix total de la réservation
+
+    Log:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de la page du carnet de pêche
+        fish_name:
+          type: string
+          description: Nom du poisson
+        size:
+          type: number
+          format: float
+          description: Taille du poisson en cm
+        weight:
+          type: number
+          format: float
+          description: Poids du poisson en kg
+        location:
+          type: string
+          description: Lieu de la pêche
+        date_caught:
+          type: string
+          format: date
+          description: Date à laquelle le poisson a été pêché
+        released:
+          type: boolean
+          description: Indique si le poisson a été relâché
+        user:
+          $ref: '#/components/schemas/User'
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicateur de succès de l'opération
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Message d'erreur
+
+tags:
+  - name: Users
+    description: Gestion des utilisateurs
+  - name: Boats
+    description: Gestion des bateaux
+  - name: Trips
+    description: Gestion des sorties de pêche
+  - name: Reservations
+    description: Gestion des réservations
+  - name: Logs
+    description: Gestion des carnets de pêche
+  - name: Auth
+    description: Authentification des utilisateurs

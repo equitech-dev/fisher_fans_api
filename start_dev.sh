@@ -49,9 +49,10 @@ fi
 # 7. Set PYTHONPATH
 export PYTHONPATH=$(pwd)
 
-# 8. Launch the FastAPI app
-echo "🚀 Launching FastAPI app..."
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# 8. Launch the dockers
+echo "🚀 Launching the dockers..."
+docker-compose down
+docker-compose up --build -d
 
 # Deactivate the virtual environment after closing the app
 deactivate
