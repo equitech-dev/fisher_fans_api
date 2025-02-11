@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from app.models.enum import BoatTypeEnum, LicenseEnum, EquipmentEnum, MotorEnum
 from pydantic.utils import GetterDict
 
@@ -12,7 +12,7 @@ class BoatBase(BaseModel):
     fabrication_year: int
     photo_url: str
     license: LicenseEnum
-    equipment: List[EquipmentEnum]
+    equipment: Optional[List[str]] = []  # Changed from Optional[str] to Optional[List[str]]
     caution: float
     nb_passenger: int
     nb_seat: int
@@ -36,6 +36,15 @@ class BoatGetter(GetterDict):
 class BoatResponse(BoatBase):
     id: int
     owner_id: int
+
+    @field_validator('equipment', mode='before')
+    def validate_equipment(cls, v):
+        """Convert string equipment to list if needed"""
+        if isinstance(v, str):
+            if not v:
+                return []
+            return [item.strip() for item in v.split(',') if item.strip()]
+        return v or []
 
     class Config:
         orm_mode = True

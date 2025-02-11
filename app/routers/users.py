@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserInscriptionReurn, UserResponse, UserBase, UserUpdate
+from app.schemas.user import UserInscriptionReurn, UserResponse, UserBase, UserUpdate, UserFullProfile
 from app.auth import create_access_token
 from app.models.enum import EquipmentEnum, RoleEnum
 from app.dependencies import get_current_user, admin_required
@@ -29,6 +29,38 @@ def create_user(user: UserBase, db: Session = Depends(get_db)):
     db.refresh(db_user)
     token = create_access_token(data={"sub": db_user.email, "status": db_user.status.value})
     return {"token": token}
+
+@router.get("/{id}/profile", response_model=UserFullProfile)
+def get_user_full_profile(
+    id: int, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+):
+    """Obtenir le profil complet d'un utilisateur avec tous ses bateaux, sorties, réservations et logs"""
+    # Vérifier que l'utilisateur demande son propre profil ou est admin
+    if current_user.id != id and current_user.role != RoleEnum.ADMIN:
+        raise HTTPException(
+            status_code=403, 
+            detail="Not authorized to view this profile"
+        )
+
+    user = db.query(User).filter(User.id == id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Ensure equipment is a list for each boat
+    for boat in user.boats:
+        if not boat.equipment or boat.equipment.strip() == "":
+            boat.equipment = []
+        elif isinstance(boat.equipment, str):
+            equipment_list = [
+                item.strip() 
+                for item in boat.equipment.split(',') 
+                if item.strip() in [e.value for e in EquipmentEnum]
+            ]
+            boat.equipment = equipment_list if equipment_list else []
+
+    return user
 
 @router.get("/{id}", response_model=UserResponse)
 def get_user(id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -69,16 +101,3 @@ def delete_user(id: int, db: Session = Depends(get_db), current_user: User = Dep
     db.delete(user)
     db.commit()
     return {"message": "User deleted"}
-
-@router.get("/me/boats", response_model=List[BoatResponse])
-def list_user_boats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    boats = db.query(Boat).filter(Boat.owner_id == current_user.id).all()
-    
-    # Ensure equipment is a list
-    for boat in boats:
-        if isinstance(boat.equipment, str):
-            boat.equipment = boat.equipment.split(',')
-        if isinstance(boat.equipment, list):
-            boat.equipment = [item.strip() for item in boat.equipment if item.strip() in [e.value for e in EquipmentEnum]]
-    
-    return boats

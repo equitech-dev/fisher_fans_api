@@ -22,10 +22,10 @@ class User(Base):
     status = Column(Enum(StatusEnum), nullable=False)
     role = Column(String(50), nullable=False, default="user")
 
-    boats = relationship("Boat", back_populates="owner")
-    logs = relationship("Log", back_populates="user")
-    reservations = relationship("Reservation", back_populates="user")
-    trips = relationship("Trip", back_populates="organizer")
+    boats = relationship("Boat", back_populates="owner", cascade="all, delete-orphan")
+    logs = relationship("Log", back_populates="user", cascade="all, delete-orphan")
+    reservations = relationship("Reservation", back_populates="user", cascade="all, delete-orphan")
+    trips = relationship("Trip", back_populates="organizer", cascade="all, delete-orphan")
 
     class Config:
         model_config = ConfigDict()

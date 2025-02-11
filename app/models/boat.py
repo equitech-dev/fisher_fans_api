@@ -22,7 +22,7 @@ class Boat(Base):
     motor = Column(Enum(MotorEnum))
     license = Column(Enum(LicenseEnum))
     boat_type = Column(Enum(BoatTypeEnum))
-    equipment = Column(String(250))  # Store as comma-separated values
+    equipment = Column(String(255))  # Stocké comme chaîne, converti en liste lors de la sérialisation
     caution = Column(Float)
 
     owner_id = Column(Integer, ForeignKey("users.id"))
@@ -31,11 +31,22 @@ class Boat(Base):
 
     @property
     def equipment_list(self):
-        return self.equipment.split(',') if self.equipment else []
+        """Convert equipment string to list, handling empty values"""
+        if not self.equipment or self.equipment.strip() == "":
+            return []
+        return [item.strip() for item in self.equipment.split(',') if item.strip()]
 
     @equipment_list.setter
     def equipment_list(self, value):
-        self.equipment = ','.join(value)
+        """Store list as comma-separated string, handling empty lists"""
+        if not value:
+            self.equipment = ""
+        else:
+            self.equipment = ','.join(filter(None, value))
+
+    def get_equipment_list(self):
+        """Legacy method for compatibility"""
+        return self.equipment_list
 
     class Config:
         model_config = ConfigDict()
