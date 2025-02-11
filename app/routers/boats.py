@@ -37,6 +37,8 @@ def filter_boats(
     max_longitude: Optional[float] = Query(None),
 ):
     query = db.query(Boat)
+    if current_user.role != RoleEnum.ADMIN:
+        query = query.filter(Boat.owner_id == current_user.id)
     if name:
         query = query.filter(Boat.name.ilike(f"%{name}%"))
     if marque:

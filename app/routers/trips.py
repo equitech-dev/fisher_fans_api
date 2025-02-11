@@ -79,7 +79,9 @@ def filter_trips(
     end_time: Optional[time] = Query(None),
 ):
     query = db.query(Trip)
-    
+    if current_user.role != RoleEnum.ADMIN:
+        query = query.filter(Trip.organizer_id == current_user.id)
+        
     if trip_type:
         query = query.filter(Trip.trip_type == trip_type)
     if min_price is not None:
