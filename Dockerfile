@@ -14,5 +14,5 @@ RUN chmod +x /app/wait-for-db.sh
 
 ENV PYTHONPATH=/app
 
-# Commande modifiée pour attendre que la BDD soit prête avant de lancer uvicorn
-CMD ["/app/wait-for-db.sh", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Commande unique pour exécuter le script d'attente, charger les données et démarrer l'API
+CMD ["sh", "-c", "/app/wait-for-db.sh && python /app/load_data.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]

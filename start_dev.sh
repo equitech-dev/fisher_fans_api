@@ -54,5 +54,13 @@ echo "🚀 Launching the dockers..."
 docker-compose down
 docker-compose up --build -d
 
+# 9. Wait for the database to be ready
+echo "⏳ Waiting for the database to be ready..."
+sleep 10
+
+# 10. Load initial data
+echo "📥 Injecting initial data into the database..."
+docker-compose exec api python /app/load_data.py
+
 # Deactivate the virtual environment after closing the app
 deactivate

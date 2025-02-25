@@ -1,17 +1,12 @@
 #!/bin/bash
-set -e
 
-# Utilisez les variables d'environnement ou des valeurs par défaut
-DB_HOST=${MYSQL_HOST:-"localhost"}
-DB_PORT=${MYSQL_PORT:-3306}
+echo "⏳ Waiting for MySQL at $MYSQL_HOST:$MYSQL_PORT..."
 
-echo "⌛ Attente de la disponibilité de la base de données sur $DB_HOST:$DB_PORT ..."
-while ! nc -z $DB_HOST $DB_PORT; do
-    sleep 1
+until python3 -c "import pymysql; pymysql.connect(host='$MYSQL_HOST', user='$MYSQL_USER', password='$MYSQL_PASSWORD', database='$MYSQL_DB'); print('✅ MySQL is ready!')" &> /dev/null; do
+  echo "🔄 Waiting for database..."
+  sleep 3
 done
-echo "✅ La base de données est accessible."
-# 9. Run database migrations
-echo "Running database migrations..."
-alembic upgrade head
-# Exécute la commande passée en argument
+
+echo "✅ Database is ready! Starting application..."
 exec "$@"
+

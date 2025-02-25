@@ -13,6 +13,10 @@ services:
       - fisher_fans_network
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      retries: 5
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -25,12 +29,13 @@ services:
     networks:
       - fisher_fans_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   api:
     build: .
     container_name: fisher_fans_api
-    command: ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
+    command: ["sh", "-c", "/app/wait-for-db.sh && python /app/load_data.py && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: root
@@ -42,7 +47,8 @@ services:
     networks:
       - fisher_fans_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - .:/app
       - ./data:/app/data
@@ -60,7 +66,8 @@ services:
     networks:
       - fisher_fans_network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - .:/app
       - ./data:/app/data
