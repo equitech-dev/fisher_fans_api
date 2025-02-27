@@ -12,7 +12,7 @@
         "company_name": "Doe Fishing Co.",
         "siret": "12345678901234",
         "rcs": "12345678901234",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -30,7 +30,7 @@
         "company_name": "Smith Fishing Co.",
         "siret": "12345678901235",
         "rcs": "12345678901235",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -48,7 +48,7 @@
         "company_name": "Brown Fishing Co.",
         "siret": "12345678901236",
         "rcs": "12345678901236",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -66,7 +66,7 @@
         "company_name": "Johnson Fishing Co.",
         "siret": "12345678901237",
         "rcs": "12345678901237",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -84,7 +84,7 @@
         "company_name": "Williams Fishing Co.",
         "siret": "12345678901238",
         "rcs": "12345678901238",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -102,7 +102,7 @@
         "company_name": "Jones Fishing Co.",
         "siret": "12345678901239",
         "rcs": "12345678901239",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -120,7 +120,7 @@
         "company_name": "Garcia Fishing Co.",
         "siret": "12345678901240",
         "rcs": "12345678901240",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -138,7 +138,7 @@
         "company_name": "Martinez Fishing Co.",
         "siret": "12345678901241",
         "rcs": "12345678901241",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -156,7 +156,7 @@
         "company_name": "Rodriguez Fishing Co.",
         "siret": "12345678901242",
         "rcs": "12345678901242",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
@@ -174,7 +174,7 @@
         "company_name": "Davis Fishing Co.",
         "siret": "12345678901243",
         "rcs": "12345678901243",
-        "status": "active",
+        "status": "INDIVIDUAL",
         "boats": [],
         "logs": [],
         "reservations": []
