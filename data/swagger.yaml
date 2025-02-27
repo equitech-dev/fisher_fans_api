@@ -30,7 +30,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserInscriptionReurn'
+                $ref: '#/components/schemas/UserWithToken'
+
         '401':
           $ref: '#/components/responses/ErrorResponse'
 

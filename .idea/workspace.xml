@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9301d0df-c4b8-4e10-8c8d-12cb8a929e65" name="Changes" comment="First commit">
-      <change afterPath="$PROJECT_DIR$/load_data.py" afterDir="false" />
+    <list default="true" id="9301d0df-c4b8-4e10-8c8d-12cb8a929e65" name="Changes" comment="commit yan for script qui injecte de la donnée , c'est trop cool ca fonctionne">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/boats.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/boats.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/logs.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/logs.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/reservations.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/reservations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/trips.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/trips.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/users.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/start_dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/start_dev.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wait-for-db.sh" beforeDir="false" afterPath="$PROJECT_DIR$/wait-for-db.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/data/swagger.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,21 +49,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;FastAPI.fisher_fans_api.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "FastAPI.fisher_fans_api.executor": "Run",
+    "Python tests.Python tests for test_api.test_create_user_valid.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Python tests.Python tests for test_api.test_create_user_valid">
     <configuration name="fisher_fans_api" type="Python.FastAPI">
       <option name="file" value="$PROJECT_DIR$/main.py" />
       <module name="fisher_fans_api" />
@@ -88,6 +80,27 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_api.test_create_user_valid" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="fisher_fans_api" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_api.test_create_user_valid&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests for test_api.test_create_user_valid" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -106,7 +119,8 @@
       <option name="presentableId" value="Default" />
       <updated>1730208808663</updated>
       <workItem from="1730208811182" duration="4775000" />
-      <workItem from="1740475852732" duration="9845000" />
+      <workItem from="1740475852732" duration="10284000" />
+      <workItem from="1740661363809" duration="3683000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -124,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730210592275</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="commit yan for script qui injecte de la donnée , c'est trop cool ca fonctionne">
+      <option name="closed" value="true" />
+      <created>1740495189852</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1740495189853</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,9 +165,11 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="First commit" />
+    <MESSAGE value="commit yan for script qui injecte de la donnée , c'est trop cool ca fonctionne" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit yan for script qui injecte de la donnée , c'est trop cool ca fonctionne" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/fisher_fans_api$fisher_fans_api.coverage" NAME="fisher_fans_api Coverage Results" MODIFIED="1730208850935" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/fisher_fans_api$.coverage" NAME=" Coverage Results" MODIFIED="1740665083376" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
   </component>
 </project>
