@@ -4,7 +4,7 @@ from app.database import get_db
 from app.models.user import User
 from app.auth import decode_access_token  # Supposez que cette fonction décode et vérifie le token
 
-def get_current_user(Authorization: str = Header(...), db: Session = Depends(get_db)) -> User:
+def get_current_user(authorization: str = Header(...), db: Session = Depends(get_db)) -> User:
     try:
         payload = decode_access_token(Authorization)  # Doit retourner un dictionnaire contenant "sub" (email)
         email = payload.get("sub")

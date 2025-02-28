@@ -15,7 +15,7 @@ def wait_for_db():
             print("Database is ready!")
             break
         except Exception as e:
-            print("Waiting for database to be ready...")
+            print("Waiting for database to be ready... error:",e)
             time.sleep(5)
 
 def init_db():
