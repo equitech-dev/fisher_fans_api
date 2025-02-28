@@ -10,6 +10,7 @@ from app.dependencies import get_current_user
 from app.models.enum import RoleEnum
 
 router = APIRouter(prefix="/v1/reservations", tags=["Reservations"])
+not_found_error_resa = "Reservation not found"
 """
 Endpoints for managing reservations
 """
@@ -151,7 +152,7 @@ def update_reservation(
     """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
-        raise HTTPException(status_code=404, detail="Reservation not found")
+        raise HTTPException(status_code=404, detail=not_found_error_resa)
 
     # Vérifier les droits d'accès
     if db_reservation.user_id != current_user.id and current_user.role != RoleEnum.ADMIN:
@@ -217,7 +218,7 @@ def delete_reservation(
     """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
-        raise HTTPException(status_code=404, detail="Reservation not found")
+        raise HTTPException(status_code=404, detail=not_found_error_resa)
 
     # Vérifier les droits d'accès
     if db_reservation.user_id != current_user.id and current_user.role != RoleEnum.ADMIN:
@@ -247,7 +248,7 @@ def get_reservation(id: int, db: Session = Depends(get_db), current_user = Depen
     """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
-        raise HTTPException(status_code=404, detail="Reservation not found")
+        raise HTTPException(status_code=404, detail=not_found_error_resa)
 
     trip = db.query(Trip).filter(Trip.id == db_reservation.trip_id).first()
     if not trip:

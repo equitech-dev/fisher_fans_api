@@ -9,17 +9,18 @@ from app.dependencies import get_current_user
 from app.models.enum import RoleEnum
 
 router = APIRouter(prefix="/v1/logs", tags=["Logs"])
+not_found_error_log = "Log not found"
 @router.post("/", response_model=LogResponse, summary="Créer une nouvelle page du carnet de pêche")
 def create_log(log: LogCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Créer une nouvelle page du carnet de pêche
-    
+
     Args:
     - log (LogCreate): données de la page à créer
-    
+
     Returns:
     - LogResponse: La page créée
     """
-    
+
     db_log = Log(**log.dict(), user_id=current_user.id)
     
     try:
@@ -46,7 +47,7 @@ def filter_logs(
     released: Optional[bool] = Query(None, description="Vrai si le poisson a été relâché")
 ):
     """Filtrer les pages du carnet de pêche
-    
+
     Args:
     - user_id (int): ID de l'utilisateur
     - fish_name (str): Nom du poisson
@@ -56,7 +57,7 @@ def filter_logs(
     - start_date (date): Date de début
     - end_date (date): Date de fin
     - released (bool): Vrai si le poisson a été relâché
-    
+
     Returns:
     - List[LogResponse]: La liste des pages filtrées
     """
@@ -88,17 +89,17 @@ def filter_logs(
 @router.get("/{id}", response_model=LogResponse, summary="Obtenir une page spécifique du carnet de pêche")
 def get_log(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Obtenir une page spécifique du carnet de pêche
-    
+
     Args:
     - id (int): ID de la page
-    
+
     Returns:
     - LogResponse: La page demandée
     """
-    
+
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
-        raise HTTPException(status_code=404, detail="Log not found")
+        raise HTTPException(status_code=404, detail=not_found_error_log)
     
     # Vérifier les droits d'accès
     if log.user_id != current_user.id and current_user.role != RoleEnum.ADMIN:
@@ -114,18 +115,18 @@ def update_log(
     current_user = Depends(get_current_user)
 ):
     """Modifier une page du carnet de pêche
-    
+
     Args:
     - id (int): ID de la page
     - log_update (LogUpdate): Données de mise à jour
-    
+
     Returns:
     - LogResponse: La page modifiée
     """
-    
+
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
-        raise HTTPException(status_code=404, detail="Log not found")
+        raise HTTPException(status_code=404, detail=not_found_error_log)
 
     # Vérifier les droits d'accès
     if log.user_id != current_user.id and current_user.role != RoleEnum.ADMIN:
@@ -147,17 +148,17 @@ def update_log(
 @router.delete("/{id}", summary="Supprimer une page du carnet de pêche")
 def delete_log(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Supprimer une page du carnet de pêche
-    
+
     Args:
     - id (int): ID de la page
-    
+
     Returns:
     - str: Message de confirmation de suppression
     """
-    
+
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
-        raise HTTPException(status_code=404, detail="Log not found")
+        raise HTTPException(status_code=404, detail=not_found_error_log)
 
     # Vérifier les droits d'accès
     if log.user_id != current_user.id and current_user.role != RoleEnum.ADMIN:

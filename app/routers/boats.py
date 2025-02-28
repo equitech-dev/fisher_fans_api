@@ -38,7 +38,7 @@ def filter_boats(
     name: Optional[str] = Query(None),
     marque: Optional[str] = Query(None),
     annee_fabrication: Optional[int] = Query(None),
-    boat_type: Optional[str] = Query(None, regex="^(open|cabine|catamaran|voilier|jetski|cano )$"),
+    boat_type: Optional[str] = Query(None, regex="^(open|cabine|catamaran|voilier|jetski|canoë)$"),
     min_latitude: Optional[float] = Query(None),
     max_latitude: Optional[float] = Query(None),
     min_longitude: Optional[float] = Query(None),
@@ -117,9 +117,7 @@ def update_boat(id: int, boat_update: BoatUpdate, db: Session = Depends(get_db),
     update_data = boat_update.dict(exclude_unset=True)
     if "equipment" in update_data:
         if isinstance(update_data["equipment"], list):
-            update_data["equipment"] = ",".join(update_data["equipment"])
-        else:
-            update_data["equipment"] = update_data["equipment"]
+                update_data["equipment"] = ",".join(update_data["equipment"])
     for key, value in update_data.items():
         setattr(boat, key, value)
     db.commit()

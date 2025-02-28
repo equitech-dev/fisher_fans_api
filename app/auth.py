@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, datetime
 import jwt
 from app.models.enum import StatusEnum
 
@@ -8,7 +8,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 3600
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire, "api_key": SECRET_KEY})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -21,7 +21,7 @@ def decode_access_token(token: str):
         return None
     
 def check_payload(payload: dict):
-    if payload.get("exp") < datetime.utcnow():
+    if payload.get("exp") < datetime.now(timezone.utc):
         raise jwt.ExpiredSignatureError
     if payload.get("api_key") != SECRET_KEY:
         raise jwt.InvalidSignatureError

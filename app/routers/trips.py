@@ -11,6 +11,8 @@ from datetime import date, time
 from app.schemas.trip import TripDate, TripSchedule
 
 router = APIRouter(prefix="/v1/trips", tags=["Trips"])
+not_found_error_trip = "Trip not found"
+
 @router.post("/", response_model=TripResponse, summary="Create a trip")
 def create_trip(trip: TripCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """
@@ -161,7 +163,7 @@ def get_trip(
     """
     trip = db.query(Trip).filter(Trip.id == id).first()
     if not trip:
-        raise HTTPException(status_code=404, detail="Trip not found")
+        raise HTTPException(status_code=404, detail=not_found_error_trip)
     
     try:
         trip_dates = [
@@ -198,7 +200,7 @@ def update_trip(
     """
     trip = db.query(Trip).filter(Trip.id == id).first()
     if not trip:
-        raise HTTPException(status_code=404, detail="Trip not found")
+        raise HTTPException(status_code=404, detail=not_found_error_trip)
     
     # Vérifier que l'utilisateur est l'organisateur ou un admin
     if trip.organizer_id != current_user.id and current_user.role != RoleEnum.ADMIN:
@@ -230,3 +232,51 @@ def update_trip(
         if key in ["trip_type", "pricing_type"] and hasattr(value, "value"):
             value = value.value
         # Conversion des dates et horaires en chaînes ISO
+        if key == "dates" and isinstance(value, list):
+            new_dates = []
+            for item in value:
+                if isinstance(item, dict):
+                    new_dates.append({
+                        "start": item["start"].isoformat() if isinstance(item["start"], date) else item["start"],
+                        "end": item["end"].isoformat() if isinstance(item["end"], date) else item["end"]
+                    })
+                else:
+                    new_dates.append({
+                        "start": item.start.isoformat(),
+                        "end": item.end.isoformat()
+                    })
+            value = new_dates
+        # Conversion des horaires en chaînes ISO
+        if key == "schedules" and isinstance(value, list):
+            new_schedules = []
+            for item in value:
+                if isinstance(item, dict):
+                    new_schedules.append({
+                        "departure": item["departure"].isoformat() if isinstance(item["departure"], time) else item["departure"],
+                        "arrival": item["arrival"].isoformat() if isinstance(item["arrival"], time) else item["arrival"]
+                    })
+                else:
+                    new_schedules.append({
+                        "departure": item.departure.isoformat(),
+                        "arrival": item.arrival.isoformat()
+                    })
+            value = new_schedules
+        setattr(trip, key, value)
+
+    db.commit()
+    db.refresh(trip)
+    return trip
+
+@router.delete("/{id}", response_model=dict)
+def delete_trip(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    trip = db.query(Trip).filter(Trip.id == id).first()
+    if not trip:
+        raise HTTPException(status_code=404, detail=not_found_error_trip)
+
+    # Vérifier que l'utilisateur est l'organisateur ou un admin
+    if trip.organizer_id != current_user.id and current_user.role != RoleEnum.ADMIN:
+        raise HTTPException(status_code=403, detail="Only the organizer or admin can delete the trip")
+
+    db.delete(trip)
+    db.commit()
+    return {"message": "Trip deleted successfully"}

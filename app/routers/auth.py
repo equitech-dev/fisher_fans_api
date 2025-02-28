@@ -13,7 +13,7 @@ router = APIRouter(prefix="/v1/login", tags=["Auth"])
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """
     Se connecter avec un email et un mot de passe.
-    
+
     Si les informations sont correctes, une clé JWT est générée et retournée.
     """
     user = db.query(User).filter(User.email == form_data.username).first()

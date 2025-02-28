@@ -21,11 +21,12 @@ class User(Base):
     rcs = Column(String(14))
     status = Column(Enum(StatusEnum), nullable=False)
     role = Column(String(50), nullable=False, default="user")
+    cascade = "all, delete-orphan"
 
-    boats = relationship("Boat", back_populates="owner", cascade="all, delete-orphan")
-    logs = relationship("Log", back_populates="user", cascade="all, delete-orphan")
-    reservations = relationship("Reservation", back_populates="user", cascade="all, delete-orphan")
-    trips = relationship("Trip", back_populates="organizer", cascade="all, delete-orphan")
+    boats = relationship("Boat", back_populates="owner", cascade=cascade)
+    logs = relationship("Log", back_populates="user", cascade=cascade)
+    reservations = relationship("Reservation", back_populates="user", cascade=cascade)
+    trips = relationship("Trip", back_populates="organizer", cascade=cascade)
 
     class Config:
         model_config = ConfigDict()

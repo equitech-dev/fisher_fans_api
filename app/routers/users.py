@@ -12,6 +12,8 @@ from app.schemas.boat import BoatResponse
 from app.utils.security import hash_password  # importer la fonction de hash
 
 router = APIRouter(prefix="/v1/users", tags=["Users"])
+not_found_error_user = "User not found"
+
 @router.post("/", response_model=UserInscriptionReurn, status_code=201)
 def create_user(user: UserBase, db: Session = Depends(get_db)):
     """
@@ -64,7 +66,7 @@ def get_user_full_profile(
 
     user = db.query(User).filter(User.id == id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail=not_found_error_user)
 
     # Ensure equipment is a list for each boat
     for boat in user.boats:
@@ -95,7 +97,7 @@ def get_user(id: int, db: Session = Depends(get_db), current_user: User = Depend
     """
     user = db.query(User).filter(User.id == id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail=not_found_error_user)
     return user
 
 @router.put("/{id}", response_model=UserResponse)
@@ -114,7 +116,8 @@ def update_user(id: int, user_update: UserUpdate, db: Session = Depends(get_db),
     """
     user = db.query(User).filter(User.id == id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        print("User not found", id)
+        raise HTTPException(status_code=404, detail=not_found_error_user)
     # Check if the current user is either the user being updated or an admin
     if current_user.id != user.id and current_user.role != RoleEnum.ADMIN:
         raise HTTPException(status_code=403, detail="Not enough permissions to update this user")
@@ -148,7 +151,7 @@ def delete_user(id: int, db: Session = Depends(get_db), current_user: User = Dep
     # Seul un admin peut supprimer un utilisateur
     user = db.query(User).filter(User.id == id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail=not_found_error_user)
     db.delete(user)
     db.commit()
     return {"message": "User deleted"}
