@@ -115,9 +115,8 @@ def update_boat(id: int, boat_update: BoatUpdate, db: Session = Depends(get_db),
     if not boat:
         raise HTTPException(status_code=404, detail="Boat not found or not owned by the current user")
     update_data = boat_update.dict(exclude_unset=True)
-    if "equipment" in update_data:
-        if isinstance(update_data["equipment"], list):
-                update_data["equipment"] = ",".join(update_data["equipment"])
+    if "equipment" in update_data and isInstance(update_data["equipment"], list):
+        update_data["equipment"] = ",".join(update_data["equipment"])
     for key, value in update_data.items():
         setattr(boat, key, value)
     db.commit()
