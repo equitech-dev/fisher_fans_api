@@ -18,69 +18,50 @@ def load_json(filename):
             return json.load(f)
     return []
 
-# Fonction pour insérer les données en base
 def insert_data():
-    db: Session = SessionLocal()
+    """Insère les données dans la base après avoir supprimé les anciennes."""
+    with SessionLocal() as db:
+        try:
+            clear_database(db)
 
-    try:
-        print("📥 Suppression des anciennes données dans le bon ordre...")
+            data_files = {
+                "users": (User, "id"),
+                "boats": (Boat, "id"),
+                "trips": (Trip, "id"),
+                "reservations": (Reservation, "id"),
+                "logs": (Log, "id"),
+            }
 
-        # 1️⃣ Supprimer les dépendances (tables enfants)
-        db.query(Log).delete()
-        db.query(Reservation).delete()
-        db.query(Trip).delete()
-        db.query(Boat).delete()
+            for file, (model, key) in data_files.items():
+                insert_if_not_exists(db, file, model, key)
 
-        # 2️⃣ Ensuite, supprimer les utilisateurs (table parent)
-        db.query(User).delete()
+            db.commit()
+            print("✅ Données insérées avec succès !")
 
-        db.commit()
-        print("✅ Suppression réussie !")
+        except Exception as e:
+            db.rollback()
+            print(f"❌ Erreur lors de l'insertion des données : {e}")
 
-        print("📥 Insertion des nouveaux utilisateurs...")
-        users = load_json("users.json")
-        for user in users:
-            existing_user = db.query(User).filter(User.id == user["id"]).first()
-            if not existing_user:
-                db.add(User(**user))
 
-        print("🚤 Insertion des bateaux...")
-        boats = load_json("boats.json")
-        for boat in boats:
-            existing_boat = db.query(Boat).filter(Boat.id == boat["id"]).first()
-            if not existing_boat:
-                db.add(Boat(**boat))
+def clear_database(db: Session):
+    """Supprime les anciennes données en respectant l'ordre des dépendances."""
+    print("📥 Suppression des anciennes données dans le bon ordre...")
 
-        print("⛵ Insertion des voyages...")
-        trips = load_json("trips.json")
-        for trip in trips:
-            existing_trip = db.query(Trip).filter(Trip.id == trip["id"]).first()
-            if not existing_trip:
-                db.add(Trip(**trip))
+    for model in [Log, Reservation, Trip, Boat, User]:  # Ordre logique de suppression
+        db.query(model).delete()
 
-        print("📝 Insertion des réservations...")
-        reservations = load_json("reservations.json")
-        for reservation in reservations:
-            existing_reservation = db.query(Reservation).filter(Reservation.id == reservation["id"]).first()
-            if not existing_reservation:
-                db.add(Reservation(**reservation))
+    db.commit()
+    print("✅ Suppression réussie !")
 
-        print("🎣 Insertion des logs de pêche...")
-        logs = load_json("logs.json")
-        for log in logs:
-            existing_log = db.query(Log).filter(Log.id == log["id"]).first()
-            if not existing_log:
-                db.add(Log(**log))
 
-        db.commit()
-        print("✅ Données insérées avec succès !")
+def insert_if_not_exists(db: Session, file_name: str, model, key: str):
+    """Insère les données depuis un fichier JSON si elles n'existent pas déjà."""
+    print(f"📥 Insertion des {file_name}...")
 
-    except Exception as e:
-        db.rollback()
-        print(f"❌ Erreur lors de l'insertion des données : {e}")
-
-    finally:
-        db.close()
+    data = load_json(f"{file_name}.json")
+    for entry in data:
+        if not db.query(model).filter(getattr(model, key) == entry[key]).first():
+            db.add(model(**entry))
 
 if __name__ == "__main__":
     insert_data()
