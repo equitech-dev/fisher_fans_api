@@ -201,71 +201,98 @@ def update_trip(
     trip = db.query(Trip).filter(Trip.id == id).first()
     if not trip:
         raise HTTPException(status_code=404, detail=not_found_error_trip)
-    
-    # Vérifier que l'utilisateur est l'organisateur ou un admin
-    if trip.organizer_id != current_user.id and current_user.role != RoleEnum.ADMIN:
-        raise HTTPException(status_code=403, detail="Only the organizer or admin can update the trip")
 
-    # Si le nombre de passagers est modifié, vérifier la capacité du bateau
+    check_user_permissions(trip, current_user)
+
     if trip_update.nb_passengers is not None:
-        boat = db.query(Boat).filter(Boat.id == trip.boat_id).first()
-        if trip_update.nb_passengers > boat.nb_passenger:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Number of passengers ({trip_update.nb_passengers}) exceeds boat capacity ({boat.nb_passenger})"
-            )
+        validate_boat_capacity(trip.boat_id, trip_update.nb_passengers, db)
 
-    # Si un nouveau bateau est spécifié, vérifier qu'il appartient à l'utilisateur
     if trip_update.boat_id:
-        boat = db.query(Boat).filter(Boat.id == trip_update.boat_id, Boat.owner_id == current_user.id).first()
-        if not boat:
-            raise HTTPException(status_code=403, detail="Can only use owned boats")
-        # Vérifier la capacité avec le nouveau bateau
-        if trip.nb_passengers > boat.nb_passenger:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Current number of passengers ({trip.nb_passengers}) exceeds new boat capacity ({boat.nb_passenger})"
-            )
+        validate_new_boat(trip, trip_update.boat_id, current_user, db)
 
-    for key, value in trip_update.dict(exclude_unset=True).items():
-        # Convertir les Enum en leur valeur string pour les types trip_type et pricing_type
-        if key in ["trip_type", "pricing_type"] and hasattr(value, "value"):
-            value = value.value
-        # Conversion des dates et horaires en chaînes ISO
-        if key == "dates" and isinstance(value, list):
-            new_dates = []
-            for item in value:
-                if isinstance(item, dict):
-                    new_dates.append({
-                        "start": item["start"].isoformat() if isinstance(item["start"], date) else item["start"],
-                        "end": item["end"].isoformat() if isinstance(item["end"], date) else item["end"]
-                    })
-                else:
-                    new_dates.append({
-                        "start": item.start.isoformat(),
-                        "end": item.end.isoformat()
-                    })
-            value = new_dates
-        # Conversion des horaires en chaînes ISO
-        if key == "schedules" and isinstance(value, list):
-            new_schedules = []
-            for item in value:
-                if isinstance(item, dict):
-                    new_schedules.append({
-                        "departure": item["departure"].isoformat() if isinstance(item["departure"], time) else item["departure"],
-                        "arrival": item["arrival"].isoformat() if isinstance(item["arrival"], time) else item["arrival"]
-                    })
-                else:
-                    new_schedules.append({
-                        "departure": item.departure.isoformat(),
-                        "arrival": item.arrival.isoformat()
-                    })
-            value = new_schedules
-        setattr(trip, key, value)
+    update_trip_attributes(trip, trip_update)
 
     db.commit()
     db.refresh(trip)
     return trip
+
+
+def check_user_permissions(trip: Trip, current_user):
+    """Vérifie si l'utilisateur peut modifier le trip."""
+    if trip.organizer_id != current_user.id and current_user.role != RoleEnum.ADMIN:
+        raise HTTPException(status_code=403, detail="Only the organizer or admin can update the trip")
+
+
+def validate_boat_capacity(boat_id: int, nb_passengers: int, db: Session):
+    """Vérifie si le nombre de passagers respecte la capacité du bateau."""
+    boat = db.query(Boat).filter(Boat.id == boat_id).first()
+    if boat and nb_passengers > boat.nb_passenger:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Number of passengers ({nb_passengers}) exceeds boat capacity ({boat.nb_passenger})"
+        )
+
+
+def validate_new_boat(trip: Trip, boat_id: int, current_user, db: Session):
+    """Vérifie que le nouveau bateau appartient à l'utilisateur et que sa capacité est suffisante."""
+    boat = db.query(Boat).filter(Boat.id == boat_id, Boat.owner_id == current_user.id).first()
+    if not boat:
+        raise HTTPException(status_code=403, detail="Can only use owned boats")
+
+    if trip.nb_passengers > boat.nb_passenger:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Current number of passengers ({trip.nb_passengers}) exceeds new boat capacity ({boat.nb_passenger})"
+        )
+
+
+def update_trip_attributes(trip: Trip, trip_update: TripUpdate):
+    """Met à jour les attributs du trip avec les nouvelles valeurs."""
+    update_data = trip_update.dict(exclude_unset=True)
+
+    for key, value in update_data.items():
+        if key in ["trip_type", "pricing_type"] and hasattr(value, "value"):
+            value = value.value
+        elif key == "dates":
+            value = format_dates(value)
+        elif key == "schedules":
+            value = format_schedules(value)
+
+        setattr(trip, key, value)
+
+
+def format_dates(dates):
+    """Formate les dates en chaînes ISO."""
+    if not isinstance(dates, list):
+        return dates
+
+    return [
+        {
+            "start": item["start"].isoformat() if isinstance(item["start"], date) else item["start"],
+            "end": item["end"].isoformat() if isinstance(item["end"], date) else item["end"]
+        } if isinstance(item, dict) else {
+            "start": item.start.isoformat(),
+            "end": item.end.isoformat()
+        }
+        for item in dates
+    ]
+
+
+def format_schedules(schedules):
+    """Formate les horaires en chaînes ISO."""
+    if not isinstance(schedules, list):
+        return schedules
+
+    return [
+        {
+            "departure": item["departure"].isoformat() if isinstance(item["departure"], time) else item["departure"],
+            "arrival": item["arrival"].isoformat() if isinstance(item["arrival"], time) else item["arrival"]
+        } if isinstance(item, dict) else {
+            "departure": item.departure.isoformat(),
+            "arrival": item.arrival.isoformat()
+        }
+        for item in schedules
+    ]
 
 @router.delete("/{id}", response_model=dict)
 def delete_trip(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
