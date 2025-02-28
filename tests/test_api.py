@@ -6,7 +6,7 @@ from app.main import app
 
 client = TestClient(app)
 # Ajout du token dans les headers pour accéder aux endpoints protégés
-client.headers.update({"Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwic3RhdHVzIjoicGFydGljdWxpZXIiLCJleHAiOjE3Mzk0MzkwODcsImFwaV9rZXkiOiJGRl9BUEkifQ.CnAAUz2KXlQSlYk7lyfmiT2oA1MH7KyErRMyX0jWn5A"})
+client.headers.update({"authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwic3RhdHVzIjoicGFydGljdWxpZXIiLCJleHAiOjE3Mzk0MzkwODcsImFwaV9rZXkiOiJGRl9BUEkifQ.CnAAUz2KXlQSlYk7lyfmiT2oA1MH7KyErRMyX0jWn5A"})
 
 # ----- Tests pour l'utilisateur -----
 def test_create_user_valid():

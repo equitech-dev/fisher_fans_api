@@ -56,7 +56,7 @@ class TestUsers:
         # Se connecter d'abord pour obtenir le token
         login_response = client.post("/v1/login", data=TEST_USER_LOGIN)
         token = login_response.json()["token"]
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = {"authorization": f"Bearer {token}"}
 
         # Obtenir le profil utilisateur
         response = client.get("/v1/users/1", headers=headers)
@@ -68,7 +68,7 @@ class TestUsers:
         # Se connecter d'abord pour obtenir le token
         login_response = client.post("/v1/login", data=TEST_USER_LOGIN)
         token = login_response.json()["token"]
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = {"authorization": f"Bearer {token}"}
 
         # Obtenir le profil complet
         response = client.get("/v1/users/1/profile", headers=headers)

@@ -6,7 +6,7 @@ from app.auth import decode_access_token  # Supposez que cette fonction décode 
 
 def get_current_user(authorization: str = Header(...), db: Session = Depends(get_db)) -> User:
     try:
-        payload = decode_access_token(Authorization)  # Doit retourner un dictionnaire contenant "sub" (email)
+        payload = decode_access_token(authorization)  # Doit retourner un dictionnaire contenant "sub" (email)
         email = payload.get("sub")
         if not email:
             raise HTTPException(status_code=401, detail="Token invalid: missing email")

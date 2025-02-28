@@ -47,7 +47,7 @@ class TestBase:
         assert response.status_code == 401
 
         # Test avec token invalide
-        invalid_headers = {"Authorization": "Bearer invalid_token"}
+        invalid_headers = {"authorization": "Bearer invalid_token"}
         response = getattr(self.client, method)(endpoint, headers=invalid_headers)
         assert response.status_code == 401
 

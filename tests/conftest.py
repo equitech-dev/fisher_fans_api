@@ -95,7 +95,7 @@ def auth_headers(client, test_user_data):
     token = response.json()["token"]
     
     # Vérifier que le token est valide
-    headers = {"Authorization": {token}}
+    headers = {"authorization": {token}}
     test_response = client.get("/v1/users/1/", headers=headers)
     assert test_response.status_code == 200
     
@@ -107,4 +107,4 @@ def admin_auth_headers(client, test_admin_user_data):
     response = client.post("/v1/users", json=test_admin_user_data)
     assert response.status_code == 201
     token = response.json()["token"]
-    return {"Authorization": f"Bearer {token}"}
+    return {"authorization": f"Bearer {token}"}
