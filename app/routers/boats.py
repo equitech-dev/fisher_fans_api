@@ -9,9 +9,17 @@ from app.dependencies import get_current_user  # importer current_user
 from app.models.enum import RoleEnum
 
 router = APIRouter(prefix="/v1/boats", tags=["Boats"])
-
 @router.post("/", response_model=dict, status_code=201)
 def create_boat(boat: BoatCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    """
+    Crée un bateau.
+
+    Args:
+    - boat (BoatCreate): Informations du bateau.
+
+    Returns:
+    - dict: Message de confirmation.
+    """
     if not current_user.boat_license:
         raise HTTPException(status_code=403, detail="User must provide boat license to create a boat")
     boat_data = boat.dict()
@@ -30,12 +38,28 @@ def filter_boats(
     name: Optional[str] = Query(None),
     marque: Optional[str] = Query(None),
     annee_fabrication: Optional[int] = Query(None),
-    boat_type: Optional[str] = Query(None, regex="^(open|cabine|catamaran|voilier|jetski|canoë)$"),
+    boat_type: Optional[str] = Query(None, regex="^(open|cabine|catamaran|voilier|jetski|cano )$"),
     min_latitude: Optional[float] = Query(None),
     max_latitude: Optional[float] = Query(None),
     min_longitude: Optional[float] = Query(None),
     max_longitude: Optional[float] = Query(None),
 ):
+    """
+    Filtrer les bateaux.
+
+    Args:
+    - name (str): Filtre sur le nom du bateau.
+    - marque (str): Filtre sur la marque du bateau.
+    - annee_fabrication (int): Filtre sur l'année de fabrication du bateau.
+    - boat_type (str): Filtre sur le type de bateau.
+    - min_latitude (float): Filtre sur la latitude minimale.
+    - max_latitude (float): Filtre sur la latitude maximale.
+    - min_longitude (float): Filtre sur la longitude minimale.
+    - max_longitude (float): Filtre sur la longitude maximale.
+
+    Returns:
+    - List[BoatResponse]: Liste des bateaux filtrés.
+    """
     query = db.query(Boat)
     if current_user.role != RoleEnum.ADMIN:
         query = query.filter(Boat.owner_id == current_user.id)
@@ -59,6 +83,15 @@ def filter_boats(
 
 @router.get("/{id}", response_model=BoatResponse)
 def get_boat(id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    """
+    Obtenir un bateau.
+
+    Args:
+    - id (int): Identifiant du bateau.
+
+    Returns:
+    - BoatResponse: Bateau.
+    """
     boat = db.query(Boat).filter(Boat.id == id).first()
     if not boat:
         raise HTTPException(status_code=404, detail="Boat not found")
@@ -68,6 +101,16 @@ def get_boat(id: int, db: Session = Depends(get_db), current_user=Depends(get_cu
 
 @router.put("/{id}", response_model=BoatResponse)
 def update_boat(id: int, boat_update: BoatUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    """
+    Mettre à jour un bateau.
+
+    Args:
+    - id (int): Identifiant du bateau.
+    - boat_update (BoatUpdate): Informations du bateau à mettre à jour.
+
+    Returns:
+    - BoatResponse: Bateau mis à jour.
+    """
     boat = db.query(Boat).filter(Boat.id == id, Boat.owner_id == current_user.id).first()
     if not boat:
         raise HTTPException(status_code=404, detail="Boat not found or not owned by the current user")
@@ -89,6 +132,15 @@ def update_boat(id: int, boat_update: BoatUpdate, db: Session = Depends(get_db),
 
 @router.delete("/{id}", response_model=dict)
 def delete_boat(id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    """
+    Supprimer un bateau.
+
+    Args:
+    - id (int): Identifiant du bateau.
+
+    Returns:
+    - dict: Message de confirmation.
+    """
     boat = db.query(Boat).filter(Boat.id == id).first()
     if not boat:
         raise HTTPException(status_code=404, detail="Boat not found")

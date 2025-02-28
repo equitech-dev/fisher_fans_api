@@ -10,9 +10,23 @@ from app.dependencies import get_current_user
 from app.models.enum import RoleEnum
 
 router = APIRouter(prefix="/v1/reservations", tags=["Reservations"])
+"""
+Endpoints for managing reservations
+"""
 
-@router.post("/", response_model=ReservationResponse)
+@router.post("/", response_model=ReservationResponse, summary="Create a new reservation")
 def create_reservation(reservation: ReservationCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    """
+    Create a new reservation
+
+    Args:
+        reservation (ReservationCreate): The reservation data
+        db (Session, optional): The database session. Defaults to Depends(get_db).
+        current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+        ReservationResponse: The created reservation
+    """
     # Vérifier que la sortie existe
     trip = db.query(Trip).filter(Trip.id == reservation.trip_id).first()
     if not trip:
@@ -61,7 +75,7 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
 
     return db_reservation
 
-@router.get("/filter", response_model=List[ReservationResponse])
+@router.get("/filter", response_model=List[ReservationResponse], summary="Filter reservations")
 def filter_reservations(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user),
@@ -74,6 +88,24 @@ def filter_reservations(
     min_price: Optional[float] = Query(None),
     max_price: Optional[float] = Query(None)
 ):
+    """
+    Filter reservations
+
+    Args:
+        db (Session, optional): The database session. Defaults to Depends(get_db).
+        current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+        trip_id (Optional[int], optional): Filter by trip id. Defaults to None.
+        user_id (Optional[int], optional): Filter by user id. Defaults to None.
+        min_date (Optional[date], optional): Filter by minimum date. Defaults to None.
+        max_date (Optional[date], optional): Filter by maximum date. Defaults to None.
+        min_seats (Optional[int], optional): Filter by minimum seats. Defaults to None.
+        max_seats (Optional[int], optional): Filter by maximum seats. Defaults to None.
+        min_price (Optional[float], optional): Filter by minimum price. Defaults to None.
+        max_price (Optional[float], optional): Filter by maximum price. Defaults to None.
+
+    Returns:
+        List[ReservationResponse]: The filtered reservations
+    """
     query = db.query(Reservation)
 
     # Filtrer par défaut sur l'utilisateur courant sauf si admin
@@ -98,13 +130,25 @@ def filter_reservations(
 
     return query.all()
 
-@router.put("/{id}", response_model=ReservationResponse)
+@router.put("/{id}", response_model=ReservationResponse, summary="Update a reservation")
 def update_reservation(
     id: int,
     reservation_update: ReservationUpdate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
+    """
+    Update a reservation
+
+    Args:
+        id (int): The reservation id
+        reservation_update (ReservationUpdate): The updated reservation data
+        db (Session, optional): The database session. Defaults to Depends(get_db).
+        current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+        ReservationResponse: The updated reservation
+    """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
         raise HTTPException(status_code=404, detail="Reservation not found")
@@ -154,12 +198,23 @@ def update_reservation(
 
     return db_reservation
 
-@router.delete("/{id}")
+@router.delete("/{id}", summary="Delete a reservation")
 def delete_reservation(
     id: int,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
+    """
+    Delete a reservation
+
+    Args:
+        id (int): The reservation id
+        db (Session, optional): The database session. Defaults to Depends(get_db).
+        current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+        [type]: [description]
+    """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
         raise HTTPException(status_code=404, detail="Reservation not found")
@@ -177,8 +232,19 @@ def delete_reservation(
 
     return {"message": "Reservation successfully deleted"}
 
-@router.get("/{id}", response_model=ReservationResponse)
+@router.get("/{id}", response_model=ReservationResponse, summary="Get a reservation")
 def get_reservation(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    """
+    Get a reservation
+
+    Args:
+        id (int): The reservation id
+        db (Session, optional): The database session. Defaults to Depends(get_db).
+        current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+        ReservationResponse: The reservation
+    """
     db_reservation = db.query(Reservation).filter(Reservation.id == id).first()
     if not db_reservation:
         raise HTTPException(status_code=404, detail="Reservation not found")
@@ -186,11 +252,3 @@ def get_reservation(id: int, db: Session = Depends(get_db), current_user = Depen
     trip = db.query(Trip).filter(Trip.id == db_reservation.trip_id).first()
     if not trip:
         raise HTTPException(status_code=404, detail="Trip not found")
-
-    # Vérifier les droits d'accès
-    if (db_reservation.user_id != current_user.id and 
-        current_user.role != RoleEnum.ADMIN and 
-        trip.user_id != current_user.id):
-        raise HTTPException(status_code=403, detail="Not authorized to view this reservation")
-
-    return db_reservation

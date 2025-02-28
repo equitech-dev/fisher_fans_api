@@ -9,8 +9,13 @@ from app.utils.security import verify_password  # importer la fonction de vérif
 
 router = APIRouter(prefix="/v1/login", tags=["Auth"])
 
-@router.post("/", response_model=UserInscriptionReurn)
+@router.post("/", response_model=UserInscriptionReurn, summary="Se connecter")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """
+    Se connecter avec un email et un mot de passe.
+    
+    Si les informations sont correctes, une clé JWT est générée et retournée.
+    """
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")

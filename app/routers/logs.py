@@ -9,10 +9,17 @@ from app.dependencies import get_current_user
 from app.models.enum import RoleEnum
 
 router = APIRouter(prefix="/v1/logs", tags=["Logs"])
-
-@router.post("/", response_model=LogResponse)
+@router.post("/", response_model=LogResponse, summary="Créer une nouvelle page du carnet de pêche")
 def create_log(log: LogCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
-    """Créer une nouvelle page du carnet de pêche"""
+    """Créer une nouvelle page du carnet de pêche
+    
+    Args:
+    - log (LogCreate): données de la page à créer
+    
+    Returns:
+    - LogResponse: La page créée
+    """
+    
     db_log = Log(**log.dict(), user_id=current_user.id)
     
     try:
@@ -25,20 +32,34 @@ def create_log(log: LogCreate, db: Session = Depends(get_db), current_user = Dep
     
     return db_log
 
-@router.get("/filter", response_model=List[LogResponse])
+@router.get("/filter", response_model=List[LogResponse], summary="Filtrer les pages du carnet de pêche")
 def filter_logs(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user),
-    user_id: Optional[int] = Query(None),
-    fish_name: Optional[str] = Query(None),
-    min_size: Optional[float] = Query(None),
-    min_weight: Optional[float] = Query(None),
-    location: Optional[str] = Query(None),
-    start_date: Optional[date] = Query(None),
-    end_date: Optional[date] = Query(None),
-    released: Optional[bool] = Query(None)
+    user_id: Optional[int] = Query(None, description="ID de l'utilisateur"),
+    fish_name: Optional[str] = Query(None, description="Nom du poisson"),
+    min_size: Optional[float] = Query(None, description="Taille minimale"),
+    min_weight: Optional[float] = Query(None, description="Poids minimal"),
+    location: Optional[str] = Query(None, description="Lieu de pêche"),
+    start_date: Optional[date] = Query(None, description="Date de début"),
+    end_date: Optional[date] = Query(None, description="Date de fin"),
+    released: Optional[bool] = Query(None, description="Vrai si le poisson a été relâché")
 ):
-    """Filtrer les pages du carnet de pêche"""
+    """Filtrer les pages du carnet de pêche
+    
+    Args:
+    - user_id (int): ID de l'utilisateur
+    - fish_name (str): Nom du poisson
+    - min_size (float): Taille minimale
+    - min_weight (float): Poids minimal
+    - location (str): Lieu de pêche
+    - start_date (date): Date de début
+    - end_date (date): Date de fin
+    - released (bool): Vrai si le poisson a été relâché
+    
+    Returns:
+    - List[LogResponse]: La liste des pages filtrées
+    """
     query = db.query(Log)
 
     # Si non admin, ne montrer que ses propres logs
@@ -64,9 +85,17 @@ def filter_logs(
 
     return query.all()
 
-@router.get("/{id}", response_model=LogResponse)
+@router.get("/{id}", response_model=LogResponse, summary="Obtenir une page spécifique du carnet de pêche")
 def get_log(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
-    """Obtenir une page spécifique du carnet de pêche"""
+    """Obtenir une page spécifique du carnet de pêche
+    
+    Args:
+    - id (int): ID de la page
+    
+    Returns:
+    - LogResponse: La page demandée
+    """
+    
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
         raise HTTPException(status_code=404, detail="Log not found")
@@ -77,14 +106,23 @@ def get_log(id: int, db: Session = Depends(get_db), current_user = Depends(get_c
     
     return log
 
-@router.put("/{id}", response_model=LogResponse)
+@router.put("/{id}", response_model=LogResponse, summary="Modifier une page du carnet de pêche")
 def update_log(
     id: int,
     log_update: LogUpdate,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """Modifier une page du carnet de pêche"""
+    """Modifier une page du carnet de pêche
+    
+    Args:
+    - id (int): ID de la page
+    - log_update (LogUpdate): Données de mise à jour
+    
+    Returns:
+    - LogResponse: La page modifiée
+    """
+    
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
         raise HTTPException(status_code=404, detail="Log not found")
@@ -106,9 +144,17 @@ def update_log(
 
     return log
 
-@router.delete("/{id}")
+@router.delete("/{id}", summary="Supprimer une page du carnet de pêche")
 def delete_log(id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
-    """Supprimer une page du carnet de pêche"""
+    """Supprimer une page du carnet de pêche
+    
+    Args:
+    - id (int): ID de la page
+    
+    Returns:
+    - str: Message de confirmation de suppression
+    """
+    
     log = db.query(Log).filter(Log.id == id).first()
     if not log:
         raise HTTPException(status_code=404, detail="Log not found")

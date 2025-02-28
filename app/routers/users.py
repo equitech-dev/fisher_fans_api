@@ -12,9 +12,17 @@ from app.schemas.boat import BoatResponse
 from app.utils.security import hash_password  # importer la fonction de hash
 
 router = APIRouter(prefix="/v1/users", tags=["Users"])
-
 @router.post("/", response_model=UserInscriptionReurn, status_code=201)
 def create_user(user: UserBase, db: Session = Depends(get_db)):
+    """
+    Crée un utilisateur.
+
+    Args:
+    - user (UserBase): Informations de l'utilisateur.
+
+    Returns:
+    - UserInscriptionReurn: Le token de l'utilisateur.
+    """
     # Vérifier l'existence de l'utilisateur
     user_db = db.query(User).filter(User.email == user.email).first()
     if user_db:
@@ -36,7 +44,17 @@ def get_user_full_profile(
     db: Session = Depends(get_db), 
     current_user: User = Depends(get_current_user)
 ):
-    """Obtenir le profil complet d'un utilisateur avec tous ses bateaux, sorties, réservations et logs"""
+    """
+    Obtenir le profil complet d'un utilisateur avec tous ses bateaux, sorties, réservations et logs
+
+    Args:
+    - id (int): Identifiant de l'utilisateur.
+    - db (Session, optional): The database session. Defaults to Depends(get_db).
+    - current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+    - UserFullProfile: Profil complet de l'utilisateur.
+    """
     # Vérifier que l'utilisateur demande son propre profil ou est admin
     if current_user.id != id and current_user.role != RoleEnum.ADMIN:
         raise HTTPException(
@@ -64,6 +82,17 @@ def get_user_full_profile(
 
 @router.get("/{id}", response_model=UserResponse)
 def get_user(id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Obtenir un utilisateur.
+
+    Args:
+    - id (int): Identifiant de l'utilisateur.
+    - db (Session, optional): The database session. Defaults to Depends(get_db).
+    - current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+    - UserResponse: L'utilisateur.
+    """
     user = db.query(User).filter(User.id == id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -71,9 +100,20 @@ def get_user(id: int, db: Session = Depends(get_db), current_user: User = Depend
 
 @router.put("/{id}", response_model=UserResponse)
 def update_user(id: int, user_update: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Mettre à jour un utilisateur.
+
+    Args:
+    - id (int): Identifiant de l'utilisateur.
+    - user_update (UserUpdate): Informations de l'utilisateur à mettre à jour.
+    - db (Session, optional): The database session. Defaults to Depends(get_db).
+    - current_user (User, optional): The current user. Defaults to Depends(get_current_user).
+
+    Returns:
+    - UserResponse: L'utilisateur mis à jour.
+    """
     user = db.query(User).filter(User.id == id).first()
     if not user:
-        print("User not found", id)
         raise HTTPException(status_code=404, detail="User not found")
     # Check if the current user is either the user being updated or an admin
     if current_user.id != user.id and current_user.role != RoleEnum.ADMIN:
@@ -94,6 +134,17 @@ def update_user(id: int, user_update: UserUpdate, db: Session = Depends(get_db),
 
 @router.delete("/{id}", response_model=dict)
 def delete_user(id: int, db: Session = Depends(get_db), current_user: User = Depends(admin_required)):
+    """
+    Supprimer un utilisateur.
+
+    Args:
+    - id (int): Identifiant de l'utilisateur.
+    - db (Session, optional): The database session. Defaults to Depends(get_db).
+    - current_user (User, optional): The current user. Defaults to Depends(admin_required).
+
+    Returns:
+    - dict: Message de confirmation.
+    """
     # Seul un admin peut supprimer un utilisateur
     user = db.query(User).filter(User.id == id).first()
     if not user:
